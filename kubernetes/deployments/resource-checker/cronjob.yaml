@@ -1,0 +1,52 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: resource-checker
+  namespace: monitoring
+  labels:
+    app: resource-checker
+spec:
+  schedule: "* * * * *"  # Every Minute
+  concurrencyPolicy: "Forbid"
+  failedJobsHistoryLimit: 10
+  startingDeadlineSeconds: 10
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 20
+      template:
+        metadata:
+          labels:
+            app: resource-checker
+        spec:
+          containers:
+            - name: resource-checker
+              image: python-resource-checker:latest
+              imagePullPolicy: Never
+              command:
+                - /app/resource_checker.py
+              env:
+              - name: LOGLEVEL
+                value: "warning"
+              resources:
+                requests:
+                  cpu: 0.1
+                  memory: 64M
+                limits:
+                  cpu: 0.5
+                  memory: 256M
+              volumeMounts:
+              - name: logs
+                mountPath: /logs
+          restartPolicy: Never
+          volumes:
+            - name: logs
+              persistentVolumeClaim:
+                claimName: logs-pvc
