@@ -1,5 +1,9 @@
 ## Replication steps
 
+Ran on ubuntu20.
+Requirements:
+    - Docker
+    - Minikube
 
 ```bash
 
@@ -24,10 +28,11 @@ The kubelet uses this information to determine which node to place a pod on, so 
 
 I'd hope so! I'd be keen on validating/running compliance on the yaml file before `kubectl apply` is run. In addition, I'd look to include pre-commit hooks as part of the dev process so that any newly written yaml files get checked on commit.
 
-I also took a look at templating yaml - Kustomize seems to be the preferred method, where you apply patches rather than using templates.
+I also took a look at templating yaml - Kustomize seems to be the preferred method, where you apply patches rather than using templates. One piece of further work I was going to do was use kustomize to patch in a different log level environment var in the cron job.
 
 3. Are there any existing tools we could use instead? Why might we write our own tool?
 
 Yep a few it seems. Some options here: https://learnk8s.io/validating-kubernetes-yaml
 
-We may want to write our own tool so that we can call some centralized monitoring/logging capability and monitor multiple deployments at once. There may be a convention for deployments that a team would want to implement, that is not a recognised standard best practice for kubernetes clusters but something more specific to the workloads being deployed.
+We may want to write our own tool so that we can call some centralized monitoring/logging capability and monitor multiple deployments at once. 
+There may be a convention for deployments that a team would want to implement, that is not a recognised standard best practice for kubernetes clusters but something more specific to the workloads being deployed.
